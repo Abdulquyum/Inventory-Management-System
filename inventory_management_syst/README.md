@@ -1,59 +1,147 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Inventory Management System (NOUN)
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Web-based inventory management system for NOUN. It supports item tracking, staff requests, administrative approvals, and reporting with a Laravel backend and a Bootstrap UI.
 
-## About Laravel
+## Table of Contents
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- [Features](#features)
+- [Screenshots](#screenshots)
+- [Tech Stack](#tech-stack)
+- [Project Structure](#project-structure)
+- [Requirements](#requirements)
+- [Setup Instructions](#setup-instructions)
+- [Environment Variables](#environment-variables)
+- [Common Commands](#common-commands)
+- [Tests](#tests)
+- [Deployment](#deployment)
+- [License](#license)
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Features
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- Role-based authentication (administrator and staff)
+- Inventory CRUD with stock tracking and categories
+- Staff item requests with admin approval workflow
+- Reporting with date and category filtering
+- Dashboard metrics and recent activity
 
-## Learning Laravel
+## Screenshots
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+Add your screenshots under `docs/images/` and update the links below.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+![Login](docs/images/login.png)
+![Dashboard](docs/images/dashboard.png)
+![Inventory](docs/images/inventory.png)
+![Requests](docs/images/requests.png)
+![Reports](docs/images/reports.png)
 
-## Laravel Sponsors
+## Tech Stack
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+- Backend: Laravel 12, PHP 8.2
+- Database: MySQL
+- Frontend: Bootstrap 5, Vite, Sass
 
-### Premium Partners
+## Project Structure
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+- `inventory_management_syst/`: Laravel application
+- `invent.sql`: SQL dump (optional)
 
-## Contributing
+## Requirements
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+- PHP 8.2+
+- Composer
+- Node.js 18+ and npm
+- MySQL 8+
 
-## Code of Conduct
+## Setup Instructions
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+1. Move into the Laravel app
 
-## Security Vulnerabilities
+```bash
+cd inventory_management_syst
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+2. Install backend dependencies
+
+```bash
+composer install
+```
+
+3. Install frontend dependencies
+
+```bash
+npm install
+```
+
+4. Create a `.env` file
+
+If you have a `.env.example`, copy it. Otherwise create `.env` using the template in the next section.
+
+5. Generate the app key
+
+```bash
+php artisan key:generate
+```
+
+6. Run migrations (and seeders if needed)
+
+```bash
+php artisan migrate
+php artisan db:seed
+```
+
+7. Build assets and run the app
+
+```bash
+npm run build
+php artisan serve
+```
+
+For local development with Vite hot reload and queue worker:
+
+```bash
+composer run dev
+```
+
+## Environment Variables
+
+Minimum `.env` template:
+
+```bash
+APP_NAME="Inventory Management System"
+APP_ENV=local
+APP_KEY=
+APP_DEBUG=true
+APP_URL=http://localhost
+
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=inventory
+DB_USERNAME=root
+DB_PASSWORD=
+```
+
+## Common Commands
+
+- `composer run dev`: run app, queue worker, and Vite dev server
+- `npm run build`: build production assets
+- `php artisan migrate`: apply database migrations
+- `php artisan db:seed`: seed sample data
+
+## Tests
+
+```bash
+composer test
+```
+
+## Deployment
+
+- Set `APP_ENV=production`, `APP_DEBUG=false`, and configure database credentials
+- Run `php artisan migrate --force`
+- Build assets with `npm run build`
+- Cache config and routes: `php artisan config:cache` and `php artisan route:cache`
+- Point your web server to the `inventory_management_syst/public/` directory
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Specify a license for this project (for example, MIT) or remove this section.
