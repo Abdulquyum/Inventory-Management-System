@@ -1,69 +1,147 @@
-Project Title:
+# Inventory Management System (NOUN)
 
-Design and Implementation of an Inventory Management System for National Open University of Nigeria (NOUN)
-Project Description:
+Web-based inventory management system for NOUN. It supports item tracking, staff requests, administrative approvals, and reporting with a Laravel backend and a Bootstrap UI.
 
-This project focuses on building a web-based Inventory Management System to manage items, requests, approvals, and reports within an institution. The system will allow administrators to control inventory records while staff users can request items online. The goal is to automate stock management and improve record accuracy, accountability, and efficiency.
-Technologies to Use:
+## Table of Contents
 
-Framework: Laravel (PHP Framework)
+- [Features](#features)
+- [Screenshots](#screenshots)
+- [Tech Stack](#tech-stack)
+- [Project Structure](#project-structure)
+- [Requirements](#requirements)
+- [Setup Instructions](#setup-instructions)
+- [Environment Variables](#environment-variables)
+- [Common Commands](#common-commands)
+- [Tests](#tests)
+- [Deployment](#deployment)
+- [License](#license)
 
-Database: MySQL
+## Features
 
-Frontend: HTML, CSS, Bootstrap
+- Role-based authentication (administrator and staff)
+- Inventory CRUD with stock tracking and categories
+- Staff item requests with admin approval workflow
+- Reporting with date and category filtering
+- Dashboard metrics and recent activity
 
-Authentication: Laravel login system
+## Screenshots
 
-Hosting: System will be deployed on a live server
-Main Functional Requirements:
+Add your screenshots under `docs/images/` and update the links below.
 
-1. User Authentication
+![Login](docs/images/login.png)
+![Dashboard](docs/images/dashboard.png)
+![Inventory](docs/images/inventory.png)
+![Requests](docs/images/requests.png)
+![Reports](docs/images/reports.png)
 
-Secure login system
+## Tech Stack
 
-Roles: Administrator and Staff
+- Backend: Laravel 12, PHP 8.2
+- Database: MySQL
+- Frontend: Bootstrap 5, Vite, Sass
 
-2. Inventory Management
+## Project Structure
 
-Add, edit, delete items
+- `inventory_management_syst/`: Laravel application
+- `invent.sql`: SQL dump (optional)
 
-Category management
+## Requirements
 
-Track available stock
+- PHP 8.2+
+- Composer
+- Node.js 18+ and npm
+- MySQL 8+
 
-3. Item Request System
+## Setup Instructions
 
-Staff can request items
+1. Move into the Laravel app
 
-Admin approves or rejects requests
+```bash
+cd inventory_management_syst
+```
 
-Stock updates automatically after approval
+2. Install backend dependencies
 
-4. Reporting System
+```bash
+composer install
+```
 
-Generate inventory reports
+3. Install frontend dependencies
 
-Filter by date and category
+```bash
+npm install
+```
 
-Export reports (PDF/Excel)
+4. Create a `.env` file
 
-5. Dashboard
+If you have a `.env.example`, copy it. Otherwise create `.env` using the template in the next section.
 
-Show summary statistics like:
+5. Generate the app key
 
-Total items
+```bash
+php artisan key:generate
+```
 
-Requests
+6. Run migrations (and seeders if needed)
 
-Recent activities
-Deployment Requirement:
+```bash
+php artisan migrate
+php artisan db:seed
+```
 
-The developer should deploy the system to a live server and ensure:
+7. Build assets and run the app
 
-The website is accessible online
+```bash
+npm run build
+php artisan serve
+```
 
-The database is configured correctly
+For local development with Vite hot reload and queue worker:
 
-The system runs without errors
+```bash
+composer run dev
+```
 
-Admin login details are provided
+## Environment Variables
+
+Minimum `.env` template:
+
+```bash
+APP_NAME="Inventory Management System"
+APP_ENV=local
+APP_KEY=
+APP_DEBUG=true
+APP_URL=http://localhost
+
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=inventory
+DB_USERNAME=root
+DB_PASSWORD=
+```
+
+## Common Commands
+
+- `composer run dev`: run app, queue worker, and Vite dev server
+- `npm run build`: build production assets
+- `php artisan migrate`: apply database migrations
+- `php artisan db:seed`: seed sample data
+
+## Tests
+
+```bash
+composer test
+```
+
+## Deployment
+
+- Set `APP_ENV=production`, `APP_DEBUG=false`, and configure database credentials
+- Run `php artisan migrate --force`
+- Build assets with `npm run build`
+- Cache config and routes: `php artisan config:cache` and `php artisan route:cache`
+- Point your web server to the `inventory_management_syst/public/` directory
+
+## License
+
+Specify a license for this project (for example, MIT) or remove this section.
