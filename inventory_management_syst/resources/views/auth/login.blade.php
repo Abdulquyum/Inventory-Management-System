@@ -1,73 +1,224 @@
-@extends('layouts.app')
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff Login - NOUN IMS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --ink: #1f1b17;
+            --muted: #6e6a64;
+            --paper: #f6f0e6;
+            --moss: #2f5c3b;
+            --olive: #4b6a41;
+            --sand: #eadfcf;
+            --line: #d8cbbb;
+            --accent: #b25c2f;
+        }
 
-@section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">{{ __('Login') }}</div>
+        * { box-sizing: border-box; }
 
-                <div class="card-body">
-                    <form method="POST" action="{{ route('login') }}">
-                        @csrf
+        body {
+            margin: 0;
+            font-family: "Space Grotesk", system-ui, -apple-system, sans-serif;
+            color: var(--ink);
+            background: radial-gradient(1200px 600px at 10% -10%, #fff4dd 0%, transparent 60%),
+                        radial-gradient(1000px 700px at 90% -20%, #e7f0e4 0%, transparent 55%),
+                        var(--paper);
+            min-height: 100vh;
+            display: grid;
+            place-items: center;
+            padding: 32px 16px;
+        }
 
-                        <div class="row mb-3">
-                            <label for="email" class="col-md-4 col-form-label text-md-end">{{ __('Email Address') }}</label>
+        .login-shell {
+            width: min(980px, 100%);
+            display: grid;
+            grid-template-columns: 1.1fr 1fr;
+            gap: 24px;
+        }
 
-                            <div class="col-md-6">
-                                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
+        .panel {
+            background: #fffdf9;
+            border: 1px solid var(--line);
+            border-radius: 22px;
+            padding: 28px;
+            box-shadow: 0 20px 40px rgba(31, 24, 18, 0.1);
+        }
 
-                                @error('email')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
+        .hero {
+            display: grid;
+            gap: 16px;
+            align-content: center;
+            background: linear-gradient(135deg, #1c1b1a 0%, #2f5c3b 55%, #b25c2f 100%);
+            color: #f6efe6;
+            border: none;
+        }
 
-                        <div class="row mb-3">
-                            <label for="password" class="col-md-4 col-form-label text-md-end">{{ __('Password') }}</label>
+        .hero h1 {
+            font-family: "Playfair Display", serif;
+            font-size: 34px;
+            margin: 0;
+        }
 
-                            <div class="col-md-6">
-                                <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
+        .hero p {
+            color: #e3ddd4;
+            margin: 0;
+        }
 
-                                @error('password')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
+        .hero .tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 12px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.12);
+            font-size: 12px;
+        }
 
-                        <div class="row mb-3">
-                            <div class="col-md-6 offset-md-4">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
+        .login h2 {
+            font-family: "Playfair Display", serif;
+            font-size: 26px;
+            margin: 0 0 8px;
+        }
 
-                                    <label class="form-check-label" for="remember">
-                                        {{ __('Remember Me') }}
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
+        .login p {
+            margin: 0 0 24px;
+            color: var(--muted);
+        }
 
-                        <div class="row mb-0">
-                            <div class="col-md-8 offset-md-4">
-                                <button type="submit" class="btn btn-primary">
-                                    {{ __('Login') }}
-                                </button>
+        .field {
+            display: grid;
+            gap: 8px;
+            margin-bottom: 18px;
+        }
 
-                                @if (Route::has('password.request'))
-                                    <a class="btn btn-link" href="{{ route('password.request') }}">
-                                        {{ __('Forgot Your Password?') }}
-                                    </a>
-                                @endif
-                            </div>
-                        </div>
-                    </form>
+        label {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 12px 14px;
+            border-radius: 12px;
+            border: 1px solid var(--line);
+            background: #fff;
+            font-family: inherit;
+        }
+
+        .error {
+            color: #b33c34;
+            font-size: 13px;
+        }
+
+        .row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .row label {
+            font-weight: 500;
+            font-size: 13px;
+            color: var(--muted);
+        }
+
+        .btn {
+            width: 100%;
+            border: none;
+            padding: 12px 16px;
+            border-radius: 999px;
+            font-weight: 600;
+            background: var(--moss);
+            color: #fffdf9;
+            cursor: pointer;
+        }
+
+        .links {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            margin-top: 18px;
+            font-size: 13px;
+        }
+
+        .links a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        .top-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--muted);
+            text-decoration: none;
+            font-size: 13px;
+            margin-bottom: 16px;
+        }
+
+        @media (max-width: 900px) {
+            .login-shell { grid-template-columns: 1fr; }
+            .hero { min-height: 180px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-shell">
+        <section class="panel hero">
+            <span class="tag">NOUN Inventory Management</span>
+            <h1>Staff Sign In</h1>
+            <p>Request items, track approvals, and stay updated on inventory status.</p>
+        </section>
+
+        <section class="panel login">
+            <a class="top-link" href="/adminLogin">Admin login</a>
+            <h2>Welcome back</h2>
+            <p>Sign in to your staff account.</p>
+
+            <form method="POST" action="{{ route('login') }}">
+                @csrf
+                <div class="field">
+                    <label for="email">Email Address</label>
+                    <input id="email" type="email" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
+                    @error('email')
+                    <div class="error">{{ $message }}</div>
+                    @enderror
                 </div>
+
+                <div class="field">
+                    <label for="password">Password</label>
+                    <input id="password" type="password" name="password" required autocomplete="current-password">
+                    @error('password')
+                    <div class="error">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="row">
+                    <label>
+                        <input type="checkbox" name="remember" {{ old('remember') ? 'checked' : '' }}>
+                        Remember me
+                    </label>
+                    @if (Route::has('password.request'))
+                        <a href="{{ route('password.request') }}" class="top-link" style="margin: 0;">Forgot Password?</a>
+                    @endif
+                </div>
+
+                <button type="submit" class="btn">Login</button>
+            </form>
+
+            <div class="links">
+                <span>New here?</span>
+                <a href="{{ route('register') }}">Create staff account</a>
             </div>
-        </div>
+        </section>
     </div>
-</div>
-@endsection
+</body>
+</html>

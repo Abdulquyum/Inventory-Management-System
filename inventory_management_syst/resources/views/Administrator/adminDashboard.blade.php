@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Item - NOUN IMS</title>
+    <title>Admin Dashboard - NOUN IMS</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
@@ -74,10 +74,6 @@
         .nav a.active {
             background: rgba(255, 255, 255, 0.12);
             border: 1px solid rgba(255, 255, 255, 0.12);
-        }
-
-        .nav a.logout {
-            border: 1px solid rgba(255, 255, 255, 0.16);
         }
 
         .content {
@@ -166,67 +162,138 @@
             text-decoration: none;
         }
 
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 18px;
+            margin-bottom: 28px;
+        }
+
+        .stat {
+            background: #fffdf9;
+            border: 1px solid var(--line);
+            border-radius: 18px;
+            padding: 18px;
+            box-shadow: 0 18px 30px rgba(31, 24, 18, 0.08);
+            position: relative;
+            overflow: hidden;
+            animation: rise 0.6s ease both;
+        }
+
+        .stat::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(120deg, transparent 0%, rgba(178, 92, 47, 0.08) 100%);
+            opacity: 0.7;
+            pointer-events: none;
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: var(--muted);
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 600;
+            margin: 6px 0 0;
+        }
+
+        .pill {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 10px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 600;
+            background: #eef3ea;
+            color: var(--moss);
+            margin-top: 8px;
+        }
+
+        .pill.warn { background: #f8efe2; color: var(--warn); }
+        .pill.danger { background: #f6e4e2; color: var(--danger); }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1.6fr 1fr;
+            gap: 22px;
+        }
+
         .card {
             background: #fffdf9;
             border: 1px solid var(--line);
             border-radius: 18px;
-            padding: 24px;
+            padding: 20px;
             box-shadow: 0 18px 30px rgba(31, 24, 18, 0.08);
-            max-width: 760px;
         }
 
         .card h2 {
             font-family: "Playfair Display", serif;
             font-size: 22px;
-            margin: 0 0 16px;
+            margin: 0 0 14px;
         }
 
-        .form-grid {
-            display: grid;
-            gap: 16px;
-        }
-
-        .field label {
-            display: block;
-            font-size: 13px;
-            color: var(--muted);
-            margin-bottom: 6px;
-        }
-
-        .field input {
+        .table {
             width: 100%;
-            border: 1px solid var(--line);
-            border-radius: 12px;
-            padding: 10px 12px;
-            font-family: inherit;
-            background: #fffdf9;
-            color: var(--ink);
+            border-collapse: collapse;
+            font-size: 14px;
         }
 
-        .btn {
-            border: 1px solid transparent;
+        .table th,
+        .table td {
+            text-align: left;
+            padding: 10px 8px;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 10px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .badge.pending { background: #f8efe2; color: var(--warn); }
+        .badge.done { background: #e7efe5; color: var(--moss); }
+        .badge.info { background: #e4edf4; color: #2f5d7a; }
+
+        .quick {
+            display: grid;
+            gap: 12px;
+        }
+
+        .quick button {
+            border: 1px solid var(--line);
+            background: #ffffff;
+            padding: 12px 14px;
             border-radius: 12px;
-            padding: 10px 16px;
             font-family: inherit;
             font-weight: 600;
             cursor: pointer;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
+            text-align: left;
         }
 
-        .btn-accent {
-            background: var(--moss);
-            color: #fffdf9;
-            border-color: rgba(31, 24, 18, 0.2);
-            box-shadow: 0 12px 20px rgba(31, 24, 18, 0.12);
+        .quick button span {
+            display: block;
+            font-weight: 400;
+            color: var(--muted);
+            margin-top: 4px;
+        }
+
+        @keyframes rise {
+            from { transform: translateY(12px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
         }
 
         @media (max-width: 980px) {
             .shell { grid-template-columns: 1fr; }
             .content { padding: 28px 20px 50px; }
             .page-header { flex-direction: column; align-items: flex-start; }
+            .grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -234,7 +301,7 @@
     <div class="shell">
         <aside class="sidebar">
             <div class="brand">NOUN IMS</div>
-            <div class="brand-sub">Admin Panel</div>
+            <div class="brand-sub">Administration Console</div>
             <nav class="nav">
                 <a href="/adminDashboard" class="active">Dashboard</a>
                 <a href="/adminInventory">Inventory</a>
@@ -254,8 +321,8 @@
         <main class="content">
             <section class="page-header">
                 <div>
-                    <h1 class="title">Add Inventory Item</h1>
-                    <p class="subtitle">Record new stock and make it available for requests.</p>
+                    <h1 class="title">Dashboard Overview</h1>
+                    <p class="subtitle">Track item flow, request volume, and stock health at a glance.</p>
                 </div>
                 <div class="profile actions" tabindex="0">
                     <div class="avatar"></div>
@@ -271,30 +338,64 @@
                 </div>
             </section>
 
-            <div class="card">
-                <h2>Item Details</h2>
-                <form action="{{ route('items.store') }}" method="post" class="form-grid">
-                    @csrf
-                    @method('POST')
-                    <div class="field">
-                        <label>Item Name</label>
-                        <input type="text" name="name" required>
+            <section class="stats">
+                <div class="stat">
+                    <div class="stat-label">Total Items</div>
+                    <div class="stat-value">{{ $totalItems ?? 0 }}</div>
+                    <div class="pill">{{ $stockStatus ?? 'Healthy stock' }}</div>
+                </div>
+                <div class="stat" style="animation-delay: 0.05s;">
+                    <div class="stat-label">Pending Requests</div>
+                    <div class="stat-value">{{ $pendingRequests ?? 0 }}</div>
+                    <div class="pill warn">Needs review</div>
+                </div>
+                <div class="stat" style="animation-delay: 0.1s;">
+                    <div class="stat-label">Low Stock Alerts</div>
+                    <div class="stat-value">{{ $lowStockAlerts ?? 0 }}</div>
+                    <div class="pill danger">Action required</div>
+                </div>
+            </section>
+
+            <section class="grid">
+                <div class="card">
+                    <h2>Recent Activities</h2>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>User</th>
+                                <th>Action</th>
+                                <th>Item</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse($activities ?? [] as $activity)
+                            <tr>
+                                <td>{{ $activity['user'] ?? 'N/A' }}</td>
+                                <td>{{ $activity['action'] ?? 'N/A' }}</td>
+                                <td>{{ $activity['item'] ?? 'N/A' }}</td>
+                                <td>{{ $activity['date'] ?? 'N/A' }}</td>
+                                <td><span class="badge {{ $activity['status_class'] ?? 'info' }}">{{ $activity['status'] ?? 'Pending' }}</span></td>
+                            </tr>
+                            @empty
+                            <tr>
+                                <td colspan="5" style="text-align: center; padding: 20px; color: var(--muted);">No recent activities</td>
+                            </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="card">
+                    <h2>Quick Actions</h2>
+                    <div class="quick">
+                        <button type="button">Review pending requests<span>Approve or reject new requests.</span></button>
+                        <button type="button">Add inventory entry<span>Register incoming items fast.</span></button>
+                        <button type="button">Generate summary report<span>Download a snapshot for audits.</span></button>
                     </div>
-                    <div class="field">
-                        <label>Amount</label>
-                        <input type="number" name="amount" required>
-                    </div>
-                    <div class="field">
-                        <label>Quantity</label>
-                        <input type="number" name="quantity" required>
-                    </div>
-                    <div class="field">
-                        <label>Status</label>
-                        <input type="text" name="status" value="available" required>
-                    </div>
-                    <button class="btn btn-accent" type="submit">Add Item</button>
-                </form>
-            </div>
+                </div>
+            </section>
         </main>
     </div>
 </body>

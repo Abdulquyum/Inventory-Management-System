@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
+use App\Models\Request;
+
 class Administrator extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\AdministratorFactory> */
@@ -21,5 +23,10 @@ class Administrator extends Authenticatable
         return [
             'password' => 'hashed',
         ];
+    }
+
+    public function requests()
+    {
+        return $this->hasMany(Request::class, 'user_id');
     }
 }

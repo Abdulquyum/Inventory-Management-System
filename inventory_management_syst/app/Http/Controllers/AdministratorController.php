@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
 
+use Illuminate\Validation\Rule;
+
 use Illuminate\Http\Request;
 
 use App\Models\User;
@@ -38,7 +40,8 @@ class AdministratorController extends Controller
     {
         $administrator = request()->validate([
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255'],
+            'email' => ['required', 'email', 'unique:administrators', 'string', 'max:255'],
+            'email.unique' => 'The email has already been taken.',
             'staff_id' => ['required', 'string'],
             'password' => ['required', 'string', 'min:4', 'confirmed']
         ]);
@@ -56,14 +59,39 @@ class AdministratorController extends Controller
 
         Auth::login($user);
 
-        return redirect('/dashboard');
+        return redirect('/adminDashboard');
+    }
+
+    public function dashboard()
+    {
+        // Get total items count
+        $totalItems = \App\Models\Items::count();
+        
+        // Get pending requests count
+        $pendingRequests = \App\Models\Request::where('status', 'pending')->count();
+        
+        // Get low stock alerts (quantity less than 5)
+        $lowStockAlerts = \App\Models\Items::where('quantity', '<', 5)->count();
+        
+        // Determine stock status
+        $stockStatus = $totalItems > 100 ? 'Healthy stock' : 'Monitor needed';
+        
+        // Get recent activities (last 5)
+        $activities = [];
+        
+        return view('Administrator.adminDashboard', [
+            'totalItems' => $totalItems,
+            'pendingRequests' => $pendingRequests,
+            'lowStockAlerts' => $lowStockAlerts,
+            'stockStatus' => $stockStatus,
+            'activities' => $activities
+        ]);
     }
 
     public function profile()
     {
         $user = Administrator::find(Auth::id());
 
-        dd($user);
         return view('Administrator.profile', [
             'user' => $user
         ]);
@@ -83,6 +111,15 @@ class AdministratorController extends Controller
         'users' => $users
         ]);
     }
+
+    /**
+     * Display the specified resource.
+     */
+    public function reports()
+     {
+        return view('Administrator.reports');
+     }
+
 
     /**
      * Display the specified resource.

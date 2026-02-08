@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Staff Dashboard - NOUN IMS</title>
+    <title>Reports - NOUN IMS</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
@@ -76,17 +76,8 @@
             border: 1px solid rgba(255, 255, 255, 0.12);
         }
 
-        .nav form button {
-            width: 100%;
-            background: transparent;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            color: #f2ede6;
-            padding: 10px 12px;
-            border-radius: 10px;
-            font-family: inherit;
-            font-weight: 600;
-            cursor: pointer;
-            text-align: left;
+        .nav a.logout {
+            border: 1px solid rgba(255, 255, 255, 0.16);
         }
 
         .content {
@@ -230,7 +221,7 @@
 
         .grid {
             display: grid;
-            grid-template-columns: 1.6fr 1fr;
+            grid-template-columns: 1fr;
             gap: 22px;
         }
 
@@ -261,6 +252,17 @@
             border-bottom: 1px solid var(--line);
         }
 
+        .table th {
+            font-size: 12px;
+            letter-spacing: 0.3px;
+            text-transform: uppercase;
+            color: var(--muted);
+        }
+
+        .table tr:hover td {
+            background: #fbf7f0;
+        }
+
         .badge {
             display: inline-flex;
             align-items: center;
@@ -273,31 +275,6 @@
         .badge.pending { background: #f8efe2; color: var(--warn); }
         .badge.done { background: #e7efe5; color: var(--moss); }
         .badge.info { background: #e4edf4; color: #2f5d7a; }
-
-        .quick {
-            display: grid;
-            gap: 12px;
-        }
-
-        .quick a {
-            border: 1px solid var(--line);
-            background: #ffffff;
-            padding: 12px 14px;
-            border-radius: 12px;
-            font-family: inherit;
-            font-weight: 600;
-            cursor: pointer;
-            text-align: left;
-            text-decoration: none;
-            color: var(--ink);
-        }
-
-        .quick a span {
-            display: block;
-            font-weight: 400;
-            color: var(--muted);
-            margin-top: 4px;
-        }
 
         @keyframes rise {
             from { transform: translateY(12px); opacity: 0; }
@@ -316,38 +293,37 @@
     <div class="shell">
         <aside class="sidebar">
             <div class="brand">NOUN IMS</div>
-            <div class="brand-sub">Staff Panel</div>
+            <div class="brand-sub">Administration Console</div>
             <nav class="nav">
-                @if(Auth::user())
-                    <a href="/dashboard" class="active">Dashboard</a>
-                @else
-                    <a href="/adminDashboard" class="active">Dashboard</a>
-                @endif
-                <a href="/items">Inventory</a>
-                <a href="/requests">Requests</a>
-                
-                <form action="{{ route('logout') }}" method="POST">
-                    @csrf
-                    @method('POST')
-                    <button type="submit">Logout</button>
-                </form>
+                <a href="/adminDashboard">Dashboard</a>
+                <a href="/adminInventory">Inventory</a>
+                <a href="/adminRequests">Requests</a>
+                <a href="/reports" class="active">Reports</a>
+                <a href="/users">Users</a>
+                <a>
+                    <form action="/adminLogout" method="POST">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-outline-light px-3 py-2">Logout</button>
+                    </form>
+                </a>
             </nav>
         </aside>
 
         <main class="content">
             <section class="page-header">
                 <div>
-                    <h1 class="title">Welcome back, {{ $user->name ?? 'Staff' }}</h1>
-                    <p class="subtitle">Here is your request activity and inventory highlights.</p>
+                    <h1 class="title">System Reports</h1>
+                    <p class="subtitle">Overview of inventory activity, requests, and system performance.</p>
                 </div>
                 <div class="profile actions" tabindex="0">
                     <div class="avatar"></div>
-                    <button type="button">{{ $user->name ?? 'Staff User' }}</button>
+                    <button type="button">Admin User</button>
                     <div class="menu">
-                        <a href="#">Profile</a>
-                        <form action="{{ route('logout') }}" method="POST">
+                        <a href="{{ route('adminProfile') }}">Profile</a>
+                        <form action="{{ route('adminLogout') }}" method="POST">
                             @csrf
-                            @method('POST')
+                            @method('DELETE')
                             <button type="submit">Logout</button>
                         </form>
                     </div>
@@ -356,60 +332,97 @@
 
             <section class="stats">
                 <div class="stat">
-                    <div class="stat-label">My Requests</div>
-                    <div class="stat-value">{{ $request->count() }}</div>
-                    <div class="pill">Total submissions</div>
+                    <div class="stat-label">Total Requests</div>
+                    <div class="stat-value">328</div>
+                    <div class="pill">This month</div>
                 </div>
                 <div class="stat" style="animation-delay: 0.05s;">
-                    <div class="stat-label">Pending Requests</div>
-                    <div class="stat-value">{{ $request->where('status', 'pending')->count() }}</div>
-                    <div class="pill warn">Waiting review</div>
+                    <div class="stat-label">Fulfilled Orders</div>
+                    <div class="stat-value">245</div>
+                    <div class="pill">74.7% rate</div>
                 </div>
                 <div class="stat" style="animation-delay: 0.1s;">
-                    <div class="stat-label">Approved Requests</div>
-                    <div class="stat-value">{{ $request->where('status', 'approved')->count() }}</div>
-                    <div class="pill">Ready to pick up</div>
+                    <div class="stat-label">Average Processing Time</div>
+                    <div class="stat-value">2.3 days</div>
+                    <div class="pill info">On track</div>
                 </div>
             </section>
 
             <section class="grid">
                 <div class="card">
-                    <h2>My Recent Requests</h2>
+                    <h2>Request Performance</h2>
                     <table class="table">
                         <thead>
                             <tr>
-                                <th>Request ID</th>
-                                <th>Item</th>
-                                <th>Qty</th>
-                                <th>Date</th>
-                                <th>Status</th>
+                                <th>Period</th>
+                                <th>Total Requests</th>
+                                <th>Approved</th>
+                                <th>Declined</th>
+                                <th>Pending</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach($request as $req)
-                                <tr>
-                                    <td>{{ $req->id }}</td>
-                                    <td>{{ $req->item }}</td>
-                                    <td>{{ $req->quantity }}</td>
-                                    <td>{{ $req->created_at->format('M d, Y') }}</td>
-                                    @if($req->status == 'pending')
-                                    <td><span class="badge pending">Pending</span></td>
-                                    @else
-                                    <td><span class="badge done">{{ ucfirst($req->status) }}</span></td>
-                                    @endif
-                                </tr>
-                            @endforeach
+                            <tr>
+                                <td>January 2026</td>
+                                <td>124</td>
+                                <td><span class="badge done">98</span></td>
+                                <td>12</td>
+                                <td><span class="badge pending">14</span></td>
+                            </tr>
+                            <tr>
+                                <td>February 2026</td>
+                                <td>156</td>
+                                <td><span class="badge done">127</span></td>
+                                <td>18</td>
+                                <td><span class="badge pending">11</span></td>
+                            </tr>
+                            <tr>
+                                <td>March 2026</td>
+                                <td>89</td>
+                                <td><span class="badge done">71</span></td>
+                                <td>10</td>
+                                <td><span class="badge pending">8</span></td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
 
                 <div class="card">
-                    <h2>Quick Actions</h2>
-                    <div class="quick">
-                        <a href="/items">Browse available items<span>Find supplies and assets quickly.</span></a>
-                        <a href="/requests">Request new items<span>Easily make request for needed items.</span></a>
-                        <a href="#">Get help<span>Reach support for inventory issues.</span></a>
-                    </div>
+                    <h2>Inventory Status Report</h2>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Category</th>
+                                <th>Total Items</th>
+                                <th>In Stock</th>
+                                <th>Low Stock</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Electronics</td>
+                                <td>340</td>
+                                <td>285</td>
+                                <td>55</td>
+                                <td><span class="badge warn">Attention needed</span></td>
+                            </tr>
+                            <tr>
+                                <td>Furniture</td>
+                                <td>156</td>
+                                <td>142</td>
+                                <td>14</td>
+                                <td><span class="badge done">Healthy</span></td>
+                            </tr>
+                            <tr>
+                                <td>Stationery</td>
+                                <td>890</td>
+                                <td>756</td>
+                                <td>134</td>
+                                <td><span class="badge pending">Monitor</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </section>
         </main>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Item - NOUN IMS</title>
+    <title>Edit Request - NOUN IMS</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
@@ -181,26 +181,15 @@
             margin: 0 0 16px;
         }
 
+        .card p {
+            color: var(--muted);
+            margin: 0 0 20px;
+            line-height: 1.6;
+        }
+
         .form-grid {
             display: grid;
             gap: 16px;
-        }
-
-        .field label {
-            display: block;
-            font-size: 13px;
-            color: var(--muted);
-            margin-bottom: 6px;
-        }
-
-        .field input {
-            width: 100%;
-            border: 1px solid var(--line);
-            border-radius: 12px;
-            padding: 10px 12px;
-            font-family: inherit;
-            background: #fffdf9;
-            color: var(--ink);
         }
 
         .btn {
@@ -216,11 +205,59 @@
             gap: 8px;
         }
 
+        .actions-row {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .btn-secondary {
+            background: #f5efe6;
+            color: var(--ink);
+            border-color: #eadfcf;
+        }
+
+        .btn-secondary:hover {
+            background: #eadfcf;
+        }
+
         .btn-accent {
             background: var(--moss);
             color: #fffdf9;
             border-color: rgba(31, 24, 18, 0.2);
             box-shadow: 0 12px 20px rgba(31, 24, 18, 0.12);
+        }
+
+        .btn-accent:hover {
+            background: #28492d;
+        }
+
+        .request-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .detail-item {
+            padding: 14px;
+            background: #fbf7f1;
+            border: 1px solid #f0e8dd;
+            border-radius: 12px;
+        }
+
+        .detail-label {
+            font-size: 12px;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+
+        .detail-value {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--ink);
         }
 
         @media (max-width: 980px) {
@@ -234,28 +271,22 @@
     <div class="shell">
         <aside class="sidebar">
             <div class="brand">NOUN IMS</div>
-            <div class="brand-sub">Admin Panel</div>
+            <div class="brand-sub">Administration Console</div>
             <nav class="nav">
-                <a href="/adminDashboard" class="active">Dashboard</a>
+                <a href="/adminDashboard">Dashboard</a>
                 <a href="/adminInventory">Inventory</a>
-                <a href="/adminRequests">Requests</a>
+                <a href="/adminRequests" class="active">Requests</a>
                 <a href="/reports">Reports</a>
                 <a href="/users">Users</a>
-                <a>
-                    <form action="/adminLogout" method="POST">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn btn-outline-light px-3 py-2">Logout</button>
-                    </form>
-                </a>
+                <a href="/logout" class="logout">Logout</a>
             </nav>
         </aside>
 
         <main class="content">
             <section class="page-header">
                 <div>
-                    <h1 class="title">Add Inventory Item</h1>
-                    <p class="subtitle">Record new stock and make it available for requests.</p>
+                    <h1 class="title">Review Request</h1>
+                    <p class="subtitle">Process and manage inventory request.</p>
                 </div>
                 <div class="profile actions" tabindex="0">
                     <div class="avatar"></div>
@@ -272,28 +303,60 @@
             </section>
 
             <div class="card">
-                <h2>Item Details</h2>
-                <form action="{{ route('items.store') }}" method="post" class="form-grid">
-                    @csrf
-                    @method('POST')
-                    <div class="field">
-                        <label>Item Name</label>
-                        <input type="text" name="name" required>
+                <h2>Request Details</h2>
+                <div class="request-details">
+                    <div class="detail-item">
+                        <div class="detail-label">Requester</div>
+                        <div class="detail-value">{{ $request->requester_name ?? 'N/A' }}</div>
                     </div>
-                    <div class="field">
-                        <label>Amount</label>
-                        <input type="number" name="amount" required>
+                    <div class="detail-item">
+                        <div class="detail-label">Department</div>
+                        <div class="detail-value">{{ $request->department ?? 'N/A' }}</div>
                     </div>
-                    <div class="field">
-                        <label>Quantity</label>
-                        <input type="number" name="quantity" required>
+                    <div class="detail-item">
+                        <div class="detail-label">Item</div>
+                        <div class="detail-value">{{ $request->item ?? 'N/A' }}</div>
                     </div>
-                    <div class="field">
-                        <label>Status</label>
-                        <input type="text" name="status" value="available" required>
+                    <div class="detail-item">
+                        <div class="detail-label">Quantity</div>
+                        <div class="detail-value">{{ $request->quantity ?? 0 }}</div>
                     </div>
-                    <button class="btn btn-accent" type="submit">Add Item</button>
-                </form>
+                    <div class="detail-item">
+                        <div class="detail-label">Requested Date</div>
+                        <div class="detail-value">{{ $request->created_at->format('M d, Y') ?? 'N/A' }}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Status</div>
+                        <div class="detail-value" style="color: {{ $request->status === 'pending' ? 'var(--warn)' : ($request->status === 'approved' ? 'var(--moss)' : 'var(--danger)') }}">{{ ucfirst($request->status) }}</div>
+                    </div>
+                </div>
+
+                @if($request->purpose)
+                    <div style="margin-bottom: 20px;">
+                        <strong>Purpose / Reason:</strong>
+                        <p style="background: #fbf7f1; padding: 12px; border-radius: 8px; margin: 8px 0; color: var(--muted);">{{ $request->purpose }}</p>
+                    </div>
+                @endif
+
+                @if($request->status === 'pending')
+                    <form method="POST" action="{{ route('requests.approve', $request->id) }}" class="form-grid">
+                        @csrf
+                        @method('PATCH')
+                        <p style="font-size: 14px; color: var(--muted); text-align: center;">Are you sure you want to approve this request?</p>
+                        <div class="actions-row">
+                            <a href="{{ route('requests.index') ?? '/adminRequests' }}" class="btn btn-secondary">Cancel</a>
+                            <button type="submit" class="btn btn-accent">Approve Request</button>
+                        </div>
+                    </form>
+                @elseif($request->status === 'approved')
+                    <div style="padding: 16px; background: #e7efe5; border: 1px solid #d7e5d8; border-radius: 12px; color: var(--moss); text-align: center;">
+                        ✓ This request has been approved.
+                    </div>
+                @else
+                    <div style="padding: 16px; background: #f6e4e2; border: 1px solid #f0d2ce; border-radius: 12px; color: var(--danger); text-align: center;">
+                        This request has been declined.
+                    </div>
+                @endif
             </div>
         </main>
     </div>

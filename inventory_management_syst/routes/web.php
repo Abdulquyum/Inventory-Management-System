@@ -5,7 +5,10 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AdministratorController;
 use App\Http\controllers\SessionController;
 use App\Http\Controllers\ItemsController;
+use App\Http\Controllers\RequestController;
 
+use App\Models\Items;
+use App\Models\Request;
 use App\Models\admin;
 
 Route::get('/', function () {
@@ -20,9 +23,13 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 //     return view('testAdmin');
 // });
 
+Route::get('/adminDashboard', [AdministratorController::class, 'dashboard'])->name('adminDashboard');
+
 Route::get('/dashboard', function () {
-    return view('dashboard');
-});
+    $user = auth()->user();
+    $request = Request::where('user_id', $user->id)->get();
+    return view('dashboard', ['user' => $user, 'request' => $request]);
+})->middleware('auth');
 
 Route::get('/admin', [AdminController::class, 'index'])->name('testAdmin');
 
@@ -47,19 +54,29 @@ Route::patch('/admin/update/{id}', [AdminController::class, 'update'])->name('ad
 
 Route::delete('admin/destroy/{id}', [AdminController::class, 'destroy'])->name('admin.destroy');
 
-// Route::get('/inventory', function () {
-//     return view('inventory');
+// Administrator Routes
+Route::get('/adminInventory', function () {
+    $items = Items::all();
+    return view('Administrator.adminInventory', ['items' => $items]);
+});
+
+// Route::get('/requests', function () {
+//     return view('request_item');
 // });
 
-Route::get('/requests', function () {
-    return view('request_item');
-});
+// Route::get('/adminRequests', function () {
+//     $requested_info = Request::all();
+//     return view('Administrator.adminRequest', [
+//         'requested_info' => $requested_info
+//     ]);
+// });
 
 Route::get('adminRegister', [AdministratorController::class, 'index'])->name('adminRegister');
 Route::post('adminRegister', [AdministratorController::class, 'register'])->name('adminRegister.store');
 
 Route::get('adminProfile', [AdministratorController::class, 'profile'])->name('adminProfile');
 Route::get('/users', [AdministratorController::class, 'users'])->name('users');
+Route::get('/reports', [AdministratorController::class, 'reports'])->name('reports');
 
 Route::get('adminLogin', [SessionController::class, 'index'])->name('adminLogin');
 Route::post('adminLogin', [SessionController::class, 'store'])->name('adminLogin.store');
@@ -78,3 +95,10 @@ Route::get('/items/{id}/edit', [ItemsController::class, 'edit'])->name('items.ed
 Route::patch('/items/edit/{id}', [ItemsController::class, 'update'])->name('items.update');
 
 Route::delete('/items/destroy/{id}', [ItemsController::class, 'destroy'])->name('items.destroy');
+
+Route::get('requests', [RequestController::class, 'index'])->name('requests.index');
+Route::post('requests', [RequestController::class, 'store'])->name('requests.store');
+Route::get('adminRequests', [RequestController::class, 'show'])->name('requests.show');
+Route::get('adminRequests/{id}', [RequestController::class, 'edit'])->name('requests.edit');
+Route::patch('adminRequests/{id}/approve', [RequestController::class, 'approve'])->name('requests.approve');
+Route::delete('adminRequests/{id}/destroy', [RequestController::class, 'destroy'])->name('requests.destroy');

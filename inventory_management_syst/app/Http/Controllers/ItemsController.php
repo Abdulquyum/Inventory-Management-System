@@ -40,7 +40,7 @@ class ItemsController extends Controller
 
         Items::create($items);
 
-        return redirect('/items');
+        return redirect('/adminInventory');
     }
 
     /**
@@ -79,7 +79,7 @@ class ItemsController extends Controller
 
         $item->update($items);
 
-        return redirect('/items');
+        return redirect('/adminInventory');
     }
 
     /**
@@ -91,6 +91,6 @@ class ItemsController extends Controller
 
         $item->delete();
 
-        return redirect('/items');
+        return redirect('/adminInventory');
     }
 }

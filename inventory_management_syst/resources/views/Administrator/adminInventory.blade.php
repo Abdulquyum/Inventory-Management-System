@@ -7,6 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+    
     <!-- CSS Links (CDN only) -->
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.0.1/css/buttons.dataTables.min.css">
@@ -21,7 +22,6 @@
             --sand: #eadfcf;
             --line: #d8cbbb;
             --accent: #b25c2f;
-            --sun: #f2b667;
             --warn: #d67c2f;
             --danger: #b33c34;
         }
@@ -80,10 +80,6 @@
             border: 1px solid rgba(255, 255, 255, 0.12);
         }
 
-        .nav a.logout {
-            border: 1px solid rgba(255, 255, 255, 0.16);
-        }
-
         .content {
             padding: 36px 40px 60px;
         }
@@ -93,7 +89,7 @@
             align-items: flex-end;
             justify-content: space-between;
             gap: 16px;
-            margin-bottom: 28px;
+            margin-bottom: 24px;
         }
 
         .title {
@@ -107,31 +103,55 @@
             color: var(--muted);
         }
 
+        .actions {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
         .btn {
-            border: 1px solid transparent;
-            border-radius: 12px;
-            padding: 10px 16px;
-            font-family: inherit;
-            font-weight: 600;
-            cursor: pointer;
-            text-decoration: none;
             display: inline-flex;
             align-items: center;
             gap: 8px;
+            padding: 10px 16px;
+            border-radius: 999px;
+            border: 1px solid var(--line);
+            background: #fffdf9;
+            color: var(--ink);
+            text-decoration: none;
+            font-weight: 600;
         }
 
-        .btn-accent {
+        .btn.primary {
             background: var(--moss);
+            border-color: var(--moss);
             color: #fffdf9;
-            border-color: rgba(31, 24, 18, 0.2);
-            box-shadow: 0 12px 20px rgba(31, 24, 18, 0.15);
         }
 
-
-        .grid {
+        .stats {
             display: grid;
-            grid-template-columns: 1fr;
-            gap: 22px;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 18px;
+            margin-bottom: 24px;
+        }
+
+        .stat {
+            background: #fffdf9;
+            border: 1px solid var(--line);
+            border-radius: 18px;
+            padding: 18px;
+            box-shadow: 0 18px 30px rgba(31, 24, 18, 0.08);
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: var(--muted);
+        }
+
+        .stat-value {
+            font-size: 26px;
+            font-weight: 600;
+            margin-top: 6px;
         }
 
         .card {
@@ -157,19 +177,8 @@
         .table th,
         .table td {
             text-align: left;
-            padding: 12px 8px;
+            padding: 10px 8px;
             border-bottom: 1px solid var(--line);
-        }
-
-        .table th {
-            font-size: 12px;
-            letter-spacing: 0.3px;
-            text-transform: uppercase;
-            color: var(--muted);
-        }
-
-        .table tr:hover td {
-            background: #fbf7f0;
         }
 
         .badge {
@@ -179,17 +188,39 @@
             border-radius: 999px;
             font-size: 12px;
             font-weight: 600;
+            background: #e7efe5;
+            color: var(--moss);
         }
 
-        .badge.done { background: #e7efe5; color: var(--moss); }
-        .badge.danger { background: #f6e4e2; color: var(--danger); }
+        .badge.low { background: #f6e4e2; color: var(--danger); }
+        .badge.warn { background: #f8efe2; color: var(--warn); }
 
+        .actions-cell {
+            display: flex;
+            gap: 8px;
+        }
+
+        .icon-btn {
+            border: 1px solid var(--line);
+            background: #ffffff;
+            padding: 6px 10px;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .empty {
+            padding: 18px;
+            border: 1px dashed var(--line);
+            border-radius: 12px;
+            color: var(--muted);
+        }
 
         @media (max-width: 980px) {
             .shell { grid-template-columns: 1fr; }
             .content { padding: 28px 20px 50px; }
             .page-header { flex-direction: column; align-items: flex-start; }
-            .grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -197,22 +228,18 @@
     <div class="shell">
         <aside class="sidebar">
             <div class="brand">NOUN IMS</div>
-            <div class="brand-sub">Staff Panel</div>
+            <div class="brand-sub">Administration Console</div>
             <nav class="nav">
-                @if(Auth::user())
-                    <a href="/dashboard" class="active">Dashboard</a>
-                @else
-                    <a href="/adminDashboard" class="active">Dashboard</a>
-                @endif
-                <a href="/items" class="active">Inventory</a>
-                <a href="/requests">Requests</a>
-                
-                <form action="{{ route('logout') }}" method="POST">
+                <a href="/adminDashboard">Dashboard</a>
+                <a href="/adminInventory" class="active">Inventory</a>
+                <a href="/adminRequests">Requests</a>
+                <!-- <a href="/reports">Reports</a> -->
+                <a href="/users">Users</a>
+                <a><form action="/adminLogout" method="POST">
                     @csrf
-                    @method('POST')
-                    <button class="btn btn-secondary" type="submit">Logout</button>
-                </form>
-                
+                    @method('DELETE')
+                    <button type="submit" class="btn">Logout</button>
+                </form></a>
             </nav>
         </aside>
 
@@ -220,42 +247,75 @@
             <section class="page-header">
                 <div>
                     <h1 class="title">Inventory Items</h1>
-                    <p class="subtitle">Manage available stock and update item details.</p>
+                    <p class="subtitle">Monitor stock levels, update quantities, and keep items tidy.</p>
                 </div>
-                <!-- <a class="btn btn-accent" href="/items/add">Add New Item</a> -->
+                <div class="actions">
+                    <a href="/items/add" class="btn primary">Add new item</a>
+                </div>
             </section>
 
-            <section class="grid">
-                <div class="card">
-                    <h2>Current Inventory</h2>
-                    <table id="dataTable2" class="table table-striped table-bordered">
-
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Item Name</th>
-                                <th>Amount (#)</th>
-                                <th>Quantity</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($items as $item)
-                            <tr>
-                                <td>{{$item->id}}</td>
-                                <td>{{$item->name}}</td>
-                                <td>{{$item->amount}}</td>
-                                <td>{{$item->quantity}}</td>
-                                @if($item->quantity > 4)
-                                <td><span class="badge done">In stock</span></td>
-                                @else
-                                <td><span class="badge danger">Low stock</span></td>
-                                @endif
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+            <section class="stats">
+                <div class="stat">
+                    <div class="stat-label">Total Items</div>
+                    <div class="stat-value">{{ $items->count() }}</div>
                 </div>
+                <div class="stat">
+                    <div class="stat-label">Low Stock</div>
+                    <div class="stat-value">{{ $items->where('quantity', '<=', 4)->count() }}</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-label">Healthy Stock</div>
+                    <div class="stat-value">{{ $items->where('quantity', '>', 4)->count() }}</div>
+                </div>
+            </section>
+
+            <section class="card">
+                <h2>Inventory List</h2>
+                @forelse($items as $item)
+                    @if ($loop->first)
+                        <table id="dataTable2" class="table table-striped table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Item Name</th>
+                                    <th>Amount (#)</th>
+                                    <th>Quantity</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                    @endif
+                                <tr>
+                                    <td>#{{ str_pad($item->id, 3, '0', STR_PAD_LEFT) }}</td>
+                                    <td>{{ $item->name }}</td>
+                                    <td>{{ $item->amount }}</td>
+                                    <td>{{ $item->quantity }}</td>
+                                    <td>
+                                        @if ($item->quantity > 4)
+                                            <span class="badge">In stock</span>
+                                        @else
+                                            <span class="badge low">Low stock</span>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        <div class="actions-cell">
+                                            <a class="icon-btn" href="/items/{{ $item->id }}/edit">Edit</a>
+                                            <form action="items/destroy/{{ $item->id }}" method="post">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button class="icon-btn" type="submit">Delete</button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                    @if ($loop->last)
+                            </tbody>
+                        </table>
+                    @endif
+                @empty
+                    <div class="empty">No inventory items available yet.</div>
+                @endforelse
             </section>
         </main>
     </div>
