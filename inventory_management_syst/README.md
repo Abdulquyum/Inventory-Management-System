@@ -142,6 +142,13 @@ composer test
 - Cache config and routes: `php artisan config:cache` and `php artisan route:cache`
 - Point your web server to the `inventory_management_syst/public/` directory
 
+### Render (Docker)
+
+- Use the Dockerfile in `inventory_management_syst/`
+- Set Render root directory to `inventory_management_syst`
+- Configure env vars: `APP_ENV=production`, `APP_DEBUG=false`, `APP_KEY`, `APP_URL`, and database credentials
+- After deploy, run migrations: `php artisan migrate --force`
+
 ## License
 
 Specify a license for this project (for example, MIT) or remove this section.
