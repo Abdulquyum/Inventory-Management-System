@@ -31,8 +31,11 @@ COPY . .
 # DB (SQLite)
 RUN mkdir -p database \
     && touch database/database.sqlite \
+    && mkdir -p bootstrap/cache \
     && chmod -R 775 database \
-    && chmod -R 775 storage
+    && chmod -R 775 storage \
+    && chmod -R 775 bootstrap/cache
+
 
 # Install PHP deps and build frontend assets
 RUN composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader \
