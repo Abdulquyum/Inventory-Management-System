@@ -29,12 +29,16 @@ WORKDIR /var/www/html
 COPY . .
 
 # DB (SQLite)
+# Create required Laravel directories
 RUN mkdir -p database \
     && touch database/database.sqlite \
+    && mkdir -p storage/framework/cache \
+    && mkdir -p storage/framework/sessions \
+    && mkdir -p storage/framework/views \
     && mkdir -p bootstrap/cache \
-    && chmod -R 775 database \
-    && chmod -R 775 storage \
-    && chmod -R 775 bootstrap/cache
+    && chown -R www-data:www-data storage bootstrap/cache database \
+    && chmod -R 775 storage bootstrap/cache database
+
 
 
 # Install PHP deps and build frontend assets
