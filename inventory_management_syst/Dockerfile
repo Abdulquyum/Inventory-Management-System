@@ -38,9 +38,7 @@ RUN mkdir -p database \
 RUN composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader \
     && npm install \
     && npm run build \
-    && php artisan storage:link \
-    && php artisan config:cache \
-    && php artisan route:cache
+    && php artisan storage:link
 
 EXPOSE 80
 
