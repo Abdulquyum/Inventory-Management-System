@@ -17,6 +17,12 @@ RUN apt-get update \
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
+# DB
+RUN touch database/database.sqlite
+RUN chmod -R 775 database
+RUN chmod -R 775 storage
+
+
 # Configure Apache to serve the Laravel public directory
 ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf \
