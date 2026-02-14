@@ -45,7 +45,9 @@ RUN mkdir -p database \
 RUN composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader \
     && npm install \
     && npm run build \
-    && php artisan storage:link
+    && php artisan storage:link \
+    && php artisan migrate --force
+
 
 EXPOSE 80
 
