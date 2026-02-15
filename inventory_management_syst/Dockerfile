@@ -42,11 +42,11 @@ RUN mkdir -p database \
 
 
 # Install PHP deps and build frontend assets
-RUN composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader \
+RUN chmod +x docker/laravel-init.sh \
     && npm install \
     && npm run build \
-    && php artisan storage:link \
-    && php artisan migrate --force
+    && ./docker/laravel-init.sh \
+    && php artisan storage:link
 
 
 EXPOSE 80
