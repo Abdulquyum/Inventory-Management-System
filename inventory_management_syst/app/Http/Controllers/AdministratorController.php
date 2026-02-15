@@ -57,7 +57,7 @@ class AdministratorController extends Controller
 
         $user = Administrator::create($administrator); 
 
-        Auth::login($user);
+        Auth::guard('admin')->login($user);
 
         return redirect('/adminDashboard');
     }
@@ -90,7 +90,7 @@ class AdministratorController extends Controller
 
     public function profile()
     {
-        $user = Administrator::find(Auth::id());
+        $user = Administrator::find(Auth::guard('admin')->id());
 
         return view('Administrator.profile', [
             'user' => $user
@@ -150,7 +150,7 @@ class AdministratorController extends Controller
      */
     public function logout(Administrator $administrator)
     {
-        Auth::logout();
+        Auth::guard('admin')->logout();
 
         // request()->session()->invalidate();
         // request()->session()->regenerateToken();

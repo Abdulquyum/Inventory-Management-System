@@ -39,8 +39,8 @@ class SessionController extends Controller
             'password' => ['required']
         ]);
 
-        if (! Auth::attempt($user)) {
-            throw validationException::withMessages([
+        if (! Auth::guard('admin')->attempt($user)) {
+            throw ValidationException::withMessages([
                 'email' => 'The provided credentials do not match our records.'
             ]);
         }
