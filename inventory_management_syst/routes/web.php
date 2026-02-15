@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AdministratorController;
-use App\Http\controllers\SessionController;
+use App\Http\Controllers\SessionController;
 use App\Http\Controllers\ItemsController;
 use App\Http\Controllers\RequestController;
 
