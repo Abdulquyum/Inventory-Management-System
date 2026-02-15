@@ -106,7 +106,7 @@ class AdministratorController extends Controller
         
         $users = User::all();
 
-        return view('administrator.users', [
+        return view('Administrator.users', [
         'administrators' => $administrators,
         'users' => $users
         ]);
