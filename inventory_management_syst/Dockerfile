@@ -9,8 +9,10 @@ RUN apt-get update \
         libpng-dev \
         libonig-dev \
         libzip-dev \
+        sqlite3 \
+        libsqlite3-dev \
         curl \
-    && docker-php-ext-install pdo_mysql mbstring zip exif pcntl bcmath gd \
+    && docker-php-ext-install pdo_sqlite mbstring zip exif pcntl bcmath gd \
     && curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
     && apt-get install -y --no-install-recommends nodejs \
     && rm -rf /var/lib/apt/lists/*
@@ -28,7 +30,6 @@ WORKDIR /var/www/html
 # Copy app source
 COPY . .
 
-# DB (SQLite)
 # Create required Laravel directories
 RUN mkdir -p database \
     && touch database/database.sqlite \
@@ -39,15 +40,12 @@ RUN mkdir -p database \
     && chown -R www-data:www-data storage bootstrap/cache database \
     && chmod -R 775 storage bootstrap/cache database
 
-
-
 # Install PHP deps and build frontend assets
-RUN chmod +x docker/laravel-init.sh \
+RUN composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader \
     && npm install \
     && npm run build \
-    && ./docker/laravel-init.sh \
-    && php artisan storage:link
-
+    && php artisan storage:link \
+    && php artisan migrate --force
 
 EXPOSE 80
 
